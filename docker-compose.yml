@@ -1,0 +1,22 @@
+services:
+  chickenapi:
+    container_name: chickenapi-local
+    build:
+      context: .
+      dockerfile: ChickenAPI/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5231:8080"
+
+  chickenmvc:
+    container_name: chickenmvc-local
+    build:
+      context: .
+      dockerfile: ChickenMVC/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      - chickenapi
+    ports:
+      - "5178:8080"
