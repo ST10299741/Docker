@@ -95,3 +95,4 @@
 /Users/gagibson959gmail.com/Docker/ChickenMVC/obj/Debug/net10.0/ChickenMVC.pdb
 /Users/gagibson959gmail.com/Docker/ChickenMVC/obj/Debug/net10.0/ChickenMVC.genruntimeconfig.cache
 /Users/gagibson959gmail.com/Docker/ChickenMVC/obj/Debug/net10.0/ref/ChickenMVC.dll
+/Users/gagibson959gmail.com/Docker/ChickenMVC/obj/Debug/net10.0/ChickenMVC.sourcelink.json

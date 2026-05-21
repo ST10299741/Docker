@@ -6,8 +6,24 @@ namespace ChickenMVC.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+
+    private readonly HttpClient _httpClient;
+    public HomeController(HttpClient httpClient)
     {
+        _httpClient = httpClient;
+    }
+
+public async Task<IActionResult> Index()
+    {
+        try {
+            var response = await _httpClient.GetStringAsync("http://localhost:5232/api/chickens");
+            ViewBag.Chickens = response;
+        }
+        catch (Exception ex)
+        {
+            // Handle error (e.g., log it)
+            ViewBag.Chickens = $"Error fetching chickens: {ex.Message}";
+        }
         return View();
     }
 

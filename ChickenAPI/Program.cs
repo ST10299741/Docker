@@ -1,42 +1,120 @@
-var builder = WebApplication.CreateBuilder(args);
+using ChickenAPI.Model;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace ChickenAPI
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-app.UseHttpsRedirection();
+            var connectionString =
+                builder.Configuration.GetConnectionString("SQL_Connection_String") ??
+                builder.Configuration["SQL_CONNECTION_STRING"];
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                // Local default for development when env/config is not set.
+                connectionString = "Server=localhost,1433;Database=Farm;User Id=sa;Password=Password1!;Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=true";
+            }
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+            builder.Services.AddDbContext<FarmDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
-app.Run();
+            builder.Services.AddControllers();
+            builder.Services.AddOpenApi();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.MapOpenApi();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/openapi/v1.json", "Chicken API v1");
+                    options.RoutePrefix = "swagger";
+                });
+            }
+
+            SeedDatabase(app);
+
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
+        }
+
+        private static void SeedDatabase(WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var logger = scope.ServiceProvider
+                .GetRequiredService<ILoggerFactory>()
+                .CreateLogger("DatabaseStartup");
+            var context = scope.ServiceProvider.GetRequiredService<FarmDbContext>();
+
+            const int maxAttempts = 10;
+
+            for (var attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                try
+                {
+                    context.Database.EnsureCreated();
+
+                    if (!context.Chickens.Any())
+                    {
+                        context.Chickens.AddRange(
+                            new Chicken
+                            {
+                                Name = "Clucky",
+                                Breed = "Leghorn",
+                                Age = 2,
+                                EggProduction = 0.75m,
+                                IsPregnant = false,
+                                LastVetCheck = new DateTime(2024, 1, 15)
+                            },
+                            new Chicken
+                            {
+                                Name = "Feathers",
+                                Breed = "Rhode Island Red",
+                                Age = 3,
+                                EggProduction = 0.60m,
+                                IsPregnant = true,
+                                LastVetCheck = new DateTime(2024, 2, 20)
+                            },
+                            new Chicken
+                            {
+                                Name = "Pecky",
+                                Breed = "Plymouth Rock",
+                                Age = 1,
+                                EggProduction = 0.80m,
+                                IsPregnant = false,
+                                LastVetCheck = new DateTime(2024, 3, 10)
+                            },
+                            new Chicken
+                            {
+                                Name = "Eggy",
+                                Breed = "Sussex",
+                                Age = 4,
+                                EggProduction = 0.50m,
+                                IsPregnant = true,
+                                LastVetCheck = new DateTime(2024, 1, 30)
+                            });
+
+                        context.SaveChanges();
+                    }
+
+                    return;
+                }
+                catch (Exception ex) when (attempt < maxAttempts)
+                {
+                    logger.LogWarning(ex, "Database was not ready. Retry {Attempt}/{MaxAttempts}", attempt, maxAttempts);
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                }
+            }
+
+            context.Database.EnsureCreated();
+        }
+    }
+}   
