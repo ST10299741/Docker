@@ -33,6 +33,7 @@ services:
       dockerfile: ChickenMVC/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+      CHICKEN_API_BASE_URL: "http://chickenapi:8080"
     depends_on:
       - chickenapi
     ports:

@@ -8,16 +8,24 @@ public class HomeController : Controller
 {
 
     private readonly HttpClient _httpClient;
-    public HomeController(HttpClient httpClient)
+    private readonly IConfiguration _configuration;
+
+    public HomeController(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _configuration = configuration;
     }
 
     public async Task<IActionResult> Index()
     {
+        var apiBaseUrl = _configuration["ChickenApi:BaseUrl"]
+            ?? _configuration["CHICKEN_API_BASE_URL"]
+            ?? "http://localhost:5232";
+        var chickensEndpoint = $"{apiBaseUrl.TrimEnd('/')}/api/chickens";
+
         try
         {
-            var response = await _httpClient.GetStringAsync("http://localhost:5232/api/chickens");
+            var response = await _httpClient.GetStringAsync(chickensEndpoint);
             ViewBag.Chickens = response;
         }
         catch (Exception ex)
