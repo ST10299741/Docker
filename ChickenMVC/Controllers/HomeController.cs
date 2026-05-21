@@ -13,9 +13,10 @@ public class HomeController : Controller
         _httpClient = httpClient;
     }
 
-public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index()
     {
-        try {
+        try
+        {
             var response = await _httpClient.GetStringAsync("http://localhost:5232/api/chickens");
             ViewBag.Chickens = response;
         }

@@ -6,7 +6,7 @@ namespace ChickenAPI.Model
     {
         public DbSet<Chicken> Chickens { get; set; }
 
-        public FarmDbContext(DbContextOptions<FarmDbContext> options) : base(options) {}
+        public FarmDbContext(DbContextOptions<FarmDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

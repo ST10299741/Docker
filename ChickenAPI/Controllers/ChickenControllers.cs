@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChickenAPI.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class ChickensController : ControllerBase
@@ -16,14 +16,14 @@ namespace ChickenAPI.Controllers
             _context = context;
         }
 
-    // GET: api/chickens
+        // GET: api/chickens
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Chicken>>> GetAll()
         {
             return await _context.Chickens.ToListAsync();
         }
 
-    // GET: api/chickens/id
+        // GET: api/chickens/id
         [HttpGet("{id}")]
         public async Task<ActionResult<Chicken>> GetById(int id)
         {
@@ -35,7 +35,7 @@ namespace ChickenAPI.Controllers
             return chicken;
         }
 
-    // POST: api/chickens
+        // POST: api/chickens
         [HttpPost]
         public async Task<ActionResult<Chicken>> Create(Chicken chicken)
         {
@@ -44,14 +44,14 @@ namespace ChickenAPI.Controllers
             return CreatedAtAction(nameof(GetById), new { id = chicken.ChickId }, chicken);
         }
 
-    // PUT: api/chickens/id
+        // PUT: api/chickens/id
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Chicken chicken)
         {
             if (id != chicken.ChickId)
             {
                 return BadRequest();
-            } 
+            }
 
             _context.Entry(chicken).State = EntityState.Modified;
 
@@ -65,19 +65,20 @@ namespace ChickenAPI.Controllers
                 {
                     return NotFound();
                 }
-                
-                    throw;
-                
+
+                throw;
+
             }
             return NoContent();
         }
 
-    // DELETE: api/chickens/id
+        // DELETE: api/chickens/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var chicken = await _context.Chickens.FindAsync(id);
-            if (chicken == null)            {
+            if (chicken == null)
+            {
                 return NotFound();
             }
 
