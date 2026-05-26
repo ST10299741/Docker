@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChickenMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9460a3065e10a797eb6bad8620254d3717c9ea47")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51447326a1eae5b4c68bc43e72bb0d3fb24df200")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChickenMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChickenMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

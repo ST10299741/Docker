@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChickenAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b14a246b5d272808bae296f80eee6132fb8ff7f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51447326a1eae5b4c68bc43e72bb0d3fb24df200")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChickenAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChickenAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
